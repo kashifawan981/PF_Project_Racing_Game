@@ -63,10 +63,14 @@ void player_gravity(char** lvl, float& offset_y, float& velocityY, bool& onGroun
 }
 
 
-int main()
-{
 
-	RenderWindow window(VideoMode(screen_x, screen_y), "VICE: Project Doom", Style::Resize);
+
+
+int main()
+{	
+	// cout << "here";
+
+	RenderWindow window(VideoMode(screen_x, screen_y), "VICE: Project Doom: Kashif", Style::Resize);
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
@@ -84,7 +88,7 @@ int main()
 
 	bgTex.loadFromFile("Data/bg.png");
 	bgSprite.setTexture(bgTex);
-	bgSprite.setPosition(0,0);
+	bgSprite.setPosition(100,200);
 
 	blockTexture.loadFromFile("Data/block1.png");
 	blockSprite.setTexture(blockTexture);
@@ -98,8 +102,8 @@ int main()
 	lvlMusic.setLoop(true);
 
 	//player data
-	float player_x = 780;
-	float player_y = 60;
+	float player_x = 60;
+	float player_y = 300;
 
 	const float gravity = 1;
 
@@ -134,6 +138,8 @@ int main()
 		lvl[13][j] = '#';
 	}
 
+	int jump = 0;
+
 	Event ev;
 	//main loop
 	while (window.isOpen())
@@ -148,6 +154,9 @@ int main()
 
 			if (ev.type == Event::KeyPressed)
 			{
+				if (Keyboard::isKeyPressed(Keyboard::Space)){
+					jump = 1;
+				}
 			}
 
 		}
@@ -161,7 +170,19 @@ int main()
 		window.clear();
 
 		display_level(window, lvl, bgTex, bgSprite, blockTexture, blockSprite, height, width, cell_size);
-		player_gravity(lvl,offset_y,velocityY,onGround,gravity,terminal_Velocity, player_x, player_y, cell_size, PlayerHeight, PlayerWidth);
+		// player_gravity(lvl,offset_y,velocityY,onGround,gravity,terminal_Velocity, player_x, player_y, cell_size, PlayerHeight, PlayerWidth);
+		// player_x += 2; 
+
+		if (jump == 1){
+			player_y--;
+			cout << "Player going up" << endl;
+			if(player_y <= 280) jump = 2;
+		}
+		else if (jump == 2) {
+			player_y++;
+			if(player_y >= 300) jump = 0;
+		}
+		
 		PlayerSprite.setPosition(player_x, player_y);
 		window.draw(PlayerSprite);
 
