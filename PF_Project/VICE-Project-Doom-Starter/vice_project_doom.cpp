@@ -70,7 +70,7 @@ int main()
 {	
 	// cout << "here";
 
-	RenderWindow window(VideoMode(screen_x, screen_y), "VICE: Project Doom: Kashif", Style::Resize);
+	RenderWindow window(VideoMode(screen_x, screen_y), "VICE: Project Doom Game", Style::Resize);
 	window.setVerticalSyncEnabled(true);
 	window.setFramerateLimit(60);
 
@@ -88,7 +88,7 @@ int main()
 
 	bgTex.loadFromFile("Data/bg.png");
 	bgSprite.setTexture(bgTex);
-	bgSprite.setPosition(100,200);
+	bgSprite.setPosition(0,0);
 
 	blockTexture.loadFromFile("Data/block1.png");
 	blockSprite.setTexture(blockTexture);
@@ -103,12 +103,16 @@ int main()
 
 	//player data
 	float player_x = 60;
-	float player_y = 300;
+	float player_y = 60;
 
 	const float gravity = 1;
 
 	Texture PlayerTexture;
-	Sprite PlayerSprite;
+	Sprite PlayerSprite1;
+	Sprite PlayerSprite2; 
+	Sprite PlayerSprite3;
+
+	
 
 	bool onGround = false;
 
@@ -117,13 +121,25 @@ int main()
 
 	float terminal_Velocity = 20;
 
-	int PlayerHeight = 96;
-	int PlayerWidth = 54;
+	int PlayerHeight = 104;
+	int PlayerWidth = 66;
 
-	PlayerTexture.loadFromFile("Data/player.png");
-	PlayerSprite.setTexture(PlayerTexture);
-	PlayerSprite.setScale(3,3);
-	PlayerSprite.setPosition(player_x, player_y);
+	PlayerTexture.loadFromFile("Assets/Sprites/3_lightblue.png");
+	PlayerSprite1.setTexture(PlayerTexture);
+	PlayerSprite1.setTextureRect(IntRect(0, 0, 24, 32));
+	PlayerSprite1.setScale(3,3);
+	PlayerSprite1.setPosition(player_x, player_y);
+    
+	PlayerSprite2.setTexture(PlayerTexture);
+    PlayerSprite2.setTextureRect(IntRect(24,0, 19, 32));
+	PlayerSprite2.setScale(3,3);
+    PlayerSprite1.setPosition(player_x, player_y);
+	
+	PlayerSprite2.setTexture(PlayerTexture);
+    PlayerSprite2.setTextureRect(IntRect(38,0, 17, 32));
+	PlayerSprite2.setScale(3,3);
+    PlayerSprite1.setPosition(100, 700);
+	
 
 
 	//creating level array
@@ -141,6 +157,7 @@ int main()
 	int jump = 0;
 
 	Event ev;
+
 	//main loop
 	while (window.isOpen())
 	{
@@ -151,40 +168,25 @@ int main()
 			{
 				window.close();
 			}
-
-			if (ev.type == Event::KeyPressed)
-			{
-				if (Keyboard::isKeyPressed(Keyboard::Space)){
-					jump = 1;
-				}
-			}
-
 		}
 
 		//presing escape to close
-		if (Keyboard::isKeyPressed(Keyboard::Escape))
+		if (Keyboard::isKeyPressed(Keyboard::Delete))
 		{
 			window.close();
 		}
 
 		window.clear();
-
+		
 		display_level(window, lvl, bgTex, bgSprite, blockTexture, blockSprite, height, width, cell_size);
-		// player_gravity(lvl,offset_y,velocityY,onGround,gravity,terminal_Velocity, player_x, player_y, cell_size, PlayerHeight, PlayerWidth);
-		// player_x += 2; 
-
-		if (jump == 1){
-			player_y--;
-			cout << "Player going up" << endl;
-			if(player_y <= 280) jump = 2;
-		}
-		else if (jump == 2) {
-			player_y++;
-			if(player_y >= 300) jump = 0;
+		 player_gravity(lvl,offset_y,velocityY,onGround,gravity,terminal_Velocity, player_x, player_y, cell_size, PlayerHeight, PlayerWidth);
+		if ( player_x <= 700){
+		 player_x += 1; 
 		}
 		
-		PlayerSprite.setPosition(player_x, player_y);
-		window.draw(PlayerSprite);
+		
+		PlayerSprite1.setPosition(player_x, player_y);
+		window.draw(PlayerSprite1);
 
 		window.display();
 	}
